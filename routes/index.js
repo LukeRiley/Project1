@@ -26,15 +26,25 @@ router.get('/search', function (req, res) {
 
 router.post('/searching', function(req, res) {
     var query = req.body.query;
-    res.redirect('/keyword?search='+query);
+    res.redirect('/keyword?search='+query+'&type=keyword');
+});
+
+router.post('/searchingXquery', function(req, res) {
+    var query = req.body.query;
+    res.redirect('/keyword?search='+query+'&type=xquery');
 });
 
 /* POST search page. */
 router.get('/keyword', function (req, res) {
     var url_parts = url.parse(req.url, true);
     var search = url_parts.query.search;
-    var input = namespace + " for $doc in collection('Colenso') where fn:contains($doc,'" + search + "') return document-uri($doc)";
-    var query = client.query(input);
+    var type = url_parts.query.type;
+    if(type == 'keyword') {
+        var input = namespace + " for $doc in collection('Colenso') where fn:contains($doc,'" + search + "') return document-uri($doc)";
+    } else if (type == 'xquery'){
+        var input = namespace + search;
+    }
+        var query = client.query(input);
 
     console.log(input);
 

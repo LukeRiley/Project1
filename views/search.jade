@@ -5,12 +5,31 @@ block link
 
 block content
     -var results = query;
-    form(method="POST", action="searching")
-        input(type="hidden", name="_method", value="PUT")
-        p Keyword search
-            input(type="text", name="query")
-        p
-            input(type="submit")
+
+    .search-tabs-wrapper
+        ul.nav.nav-tabs(role="tablist")
+            li.active
+                a(href="#default" role="tab" data-toggle="tab") Keyword
+            li
+                a(href="#xquery" role="tab" data-toggle="tab") XQuery
+        .tab-content.search-tabs-content
+            .tab-pane.active(id="default")
+                p
+                form(method="POST", action="searching")
+                    input(type="hidden", name="_method", value="PUT")
+                    p Keyword search
+                        input(type="text", name="query")
+                    p
+                        input(type="submit")
+            .tab-pane(id="xquery")
+                p
+                form(method="POST", action="searchingXquery")
+                    input(type="hidden", name="_method", value="PUT")
+                    p XQuery search
+                        input(type="text", name="query")
+                    p
+                        input(type="submit")
+
 
     h3 Your Results
     p
