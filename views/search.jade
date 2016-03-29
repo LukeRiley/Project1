@@ -1,0 +1,20 @@
+extends layout
+
+block link
+    -var selected = 'Search';
+
+block content
+    -var results = query;
+    form(method="POST", action="searching")
+        input(type="hidden", name="_method", value="PUT")
+        p Keyword search
+            input(type="text", name="query")
+        p
+            input(type="submit")
+
+    h3 Your Results
+    p
+        each val in results.length ? results : ['']
+            .panel.panel-default
+                .panel-heading
+                    a(href='/document?file='+val)=val
