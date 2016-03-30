@@ -7,5 +7,7 @@ block content
   h1 Colenso Project
   p
     form(method="POST", action="/upload", enctype="multipart/form-data")
-      input(type="file", name="file")
-      input(type="submit")
+      label Upload an XML document
+        input(type="file", name="file")
+        input(type="submit")
+  p #{message}

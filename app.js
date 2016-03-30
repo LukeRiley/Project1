@@ -4,8 +4,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var basex = require('basex');
-var client = new basex.Session("127.0.0.1",1984,"admin","admin");
 var namespace = "declare namespace tei= 'http://www.tei-c.org/ns/1.0';"
 
 var routes = require('./routes/index');
@@ -59,14 +57,5 @@ app.use(function(err, req, res, next) {
   });
 });
 
-
-
-
-var input = namespace + "for $doc in collection(\'Colenso\') "+
-            "where fn:contains($doc,\'kate\') return document-uri($doc)";
-var query = client.query(input);
-query.execute(function(err, r) {
- console.log(r.result);
-});
 
 module.exports = app;

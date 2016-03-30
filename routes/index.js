@@ -10,6 +10,8 @@ var path = require('path');
 var multer = require('multer');
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
+var log = require("debug");
+basex.debug_mode = true;
 
 var url = require('url');
 
@@ -105,15 +107,15 @@ router.get('/download', function(req, res){ // this routes all types of file
 router.post('/upload', upload.single('file'), function(req, res) {
     console.log(req.file);
     if (typeof req.file === "undefined"){
-        res.send('No file found');
-        res.redirect('/');
+        res.render('index', {message: "File not found"});
     }
     else {
         var doc = req.file.buffer.toString("utf-8", 0, req.file.buffer.length);
-        console.log(doc);
-        client.add("/Colenso/"+req.file.originalname, doc)
-        res.send("Success");
-        res.redirect('/');
+        client.execute("OPEN Colenso", function (e, r) {
+            client.add(req.file.originalname, doc);
+            client.execute("CLOSE");
+        });
+        res.render('index', {message: "Success"});
     }
 });
 
