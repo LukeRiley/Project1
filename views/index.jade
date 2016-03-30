@@ -4,16 +4,8 @@ block link
   -var selected = 'Home';
 
 block content
-  h1 What
-  h2 look at this
-  .panel.panel-default
-      .panel-heading very cool
-      .panel-body wow
+  h1 Colenso Project
   p
-  .panel.panel-danger
-      .panel-heading dangerous
-      .panel-body scary
-  p
-  .panel.panel-primary
-      .panel-heading calming
-      .panel-body nice
+    form(method="POST", action="/upload", enctype="multipart/form-data")
+      input(type="file", name="file")
+      input(type="submit")

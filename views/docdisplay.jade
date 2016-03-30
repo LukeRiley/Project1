@@ -4,6 +4,7 @@ block link
     -var selected = 'Search';
 
 block content
+    -var downloadLink = '/download?file=' + name;
     .panel.panel-primary
         .panel-heading
             p Result
@@ -12,3 +13,5 @@ block content
     .well
         p raw xml
         pre(xml:lang='en') #{document}
+
+    a.btn.btn-default(href= downloadLink) Download

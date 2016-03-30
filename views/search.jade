@@ -12,6 +12,8 @@ block content
                 a(href="#default" role="tab" data-toggle="tab") Keyword
             li
                 a(href="#xquery" role="tab" data-toggle="tab") XQuery
+            li
+                a(href="#logical" role="tab" data-toggle="tab") Logical
         .tab-content.search-tabs-content
             .tab-pane.active(id="default")
                 p
@@ -26,6 +28,15 @@ block content
                 form(method="POST", action="searchingXquery")
                     input(type="hidden", name="_method", value="PUT")
                     p XQuery search
+                        input(type="text", name="query")
+                    p
+                        input(type="submit")
+            .tab-pane(id="logical")
+                p Please encase strings within apostrophes
+                p e.g. 'Kate' OR 'Katherine'
+                form(method="POST", action="searchingLogical")
+                    input(type="hidden", name="_method", value="PUT")
+                    p Logical search
                         input(type="text", name="query")
                     p
                         input(type="submit")

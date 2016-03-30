@@ -6,6 +6,10 @@ var basex = require('basex');
 var client = new basex.Session("127.0.0.1", 1984, "admin", "admin");
 var namespace = "declare namespace tei= 'http://www.tei-c.org/ns/1.0';"
 var parseString = require('xml2js').parseString;
+var path = require('path');
+var multer = require('multer');
+var storage = multer.memoryStorage();
+var upload = multer({ storage: storage });
 
 var url = require('url');
 
@@ -34,6 +38,15 @@ router.post('/searchingXquery', function(req, res) {
     res.redirect('/keyword?search='+query+'&type=xquery');
 });
 
+router.post('/searchingLogical', function(req, res) {
+    var query = req.body.query;
+    query = query.replace("\'", "'");
+    query = query.replace("AND", "ftand");
+    query = query.replace("OR", "ftor");
+    query = query.replace("NOT", "ftnot");
+    res.redirect('/keyword?search='+query+'&type=logical');
+});
+
 /* POST search page. */
 router.get('/keyword', function (req, res) {
     var url_parts = url.parse(req.url, true);
@@ -43,19 +56,24 @@ router.get('/keyword', function (req, res) {
         var input = namespace + " for $doc in collection('Colenso') where fn:contains($doc,'" + search + "') return document-uri($doc)";
     } else if (type == 'xquery'){
         var input = namespace + search;
+    } else if (type == 'logical'){
+        var input = namespace + " for $doc in collection('Colenso') where $doc [$doc contains text "+search+"] return document-uri($doc)";
     }
-        var query = client.query(input);
+    var query = client.query(input);
 
     console.log(input);
 
     query.execute(function (err, r) {
         if (err) {
-            console.log("OH NO ERROR");
+            console.log(err);
         }
         console.log(r.result);
 
         var results = r.result;
-        var arr = results.toString().split("\n");
+        var arr = [];
+        if(typeof results != 'undefined') {
+            arr = results.toString().split("\n");
+        }
         console.log(arr);
         res.render('search', {query: arr});
     });
@@ -69,9 +87,34 @@ router.get ('/document', function(req, res) {
     var query = client.query(input);
 
     query.execute(function (err, r) {
-            res.render('docdisplay', {document : r.result});
+            res.render('docdisplay', {document : r.result, name : file});
 
     });
+});
+
+router.get('/download', function(req, res){ // this routes all types of file
+    var url_parts = url.parse(req.url, true);
+    var file = url_parts.query.file;
+
+    var filePath = path.resolve("../")+'/'+file;
+
+    res.download(filePath); // magic of download fuction
+
+});
+
+router.post('/upload', upload.single('file'), function(req, res) {
+    console.log(req.file);
+    if (typeof req.file === "undefined"){
+        res.send('No file found');
+        res.redirect('/');
+    }
+    else {
+        var doc = req.file.buffer.toString("utf-8", 0, req.file.buffer.length);
+        console.log(doc);
+        client.add("/Colenso/"+req.file.originalname, doc)
+        res.send("Success");
+        res.redirect('/');
+    }
 });
 
 module.exports = router;
