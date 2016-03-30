@@ -69,10 +69,7 @@ router.get ('/document', function(req, res) {
     var query = client.query(input);
 
     query.execute(function (err, r) {
-        parseString(r.result.toString(), function (err, result) {
-            console.dir(result.TEI.text);
-            res.render('docdisplay', {documentraw : r.result, document : result});
-        });
+            res.render('docdisplay', {document : r.result});
 
     });
 });

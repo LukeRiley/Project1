@@ -4,12 +4,11 @@ block link
     -var selected = 'Search';
 
 block content
-    -var doc = document;
     .panel.panel-primary
         .panel-heading
-            p title
+            p Result
         .panel-primary
-            doc.TEI.text
+            !{document}
     .well
         p raw xml
-        pre(xml:lang='en') #{documentraw}
+        pre(xml:lang='en') #{document}
